@@ -10,6 +10,6 @@ namespace BookStore.Data
             : base(options)
         {
         }
-        public DbSet<BookStore.Models.Book> Book { get; set; } = default!;
+        public DbSet<Book> Book { get; set; } = default!;
     }
 }

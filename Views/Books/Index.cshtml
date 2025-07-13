@@ -1,51 +1,68 @@
-﻿@model IEnumerable<BookStore.Models.Book>
+﻿@using BookStore.Models
+@model IEnumerable<Book>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Bookname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bookname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@{
+    ViewData["Title"] = "Books";
 }
-    </tbody>
-</table>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Books</h2>
+    <a class="btn btn-primary" asp-action="Create">+ Book</a>
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+@foreach (var book in Model)
+{
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            @if (!string.IsNullOrEmpty(book.ImageUrl))
+            {
+                <img src="@book.ImageUrl" class="card-img-top" alt="@book.Title" style="height: 250px; object-fit: cover;" />
+            }
+            else
+            {
+                <div class="d-flex align-items-center justify-content-center bg-secondary text-white" style="height: 250px;">
+                    <span>No Image</span>
+                </div>
+            }
+
+            <div class="card-body">
+                <h5 class="card-title">@book.Title</h5>
+                <h6 class="card-subtitle text-muted mb-2">@book.Author</h6>
+                <p class="card-text small">@book.Description</p>
+                <p class="mb-1 fw-semibold">Genre: @book.Genre</p>
+                <p class="fw-bold">$@book.Price.00</p>
+
+            </div>
+
+                <a class="btn btn-success btn-sm w-100"
+                   asp-controller="Cart"
+                   asp-action="AddToCart"
+                   asp-route-id="@book.Id">Add to Cart</a>
+
+
+            <div class="card-footer bg-transparent border-top-0">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
+                        Actions
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end w-100">
+                        <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@book.Id">Edit</a></li>
+                        <li><a class="dropdown-item" asp-action="Details" asp-route-id="@book.Id">Details</a></li>
+                        <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@book.Id">Delete</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+</div>
